@@ -1,24 +1,37 @@
 <template>
-  <span class="post-date text-faded" :title="humanFriendlyDate()">
-    {{ diffFormHumans() }}
+  <span :title="humanFriendlyDate" class="post-date text-faded">
+    {{ diffFormHumans }}
   </span>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import dayjs from 'dayjs'
   import relativeTime from 'dayjs/plugin/relativeTime'
   import localizeDate from 'dayjs/plugin/localizedFormat'
+  import { computed } from 'vue'
 
-  const { timestamp } = defineProps<{ timestamp: number }>()
+  type Timestamp = { seconds: number }
+
+  const { timestamp } = defineProps<{
+    timestamp: Timestamp | number
+  }>()
 
   dayjs.extend(relativeTime)
   dayjs.extend(localizeDate)
 
-  function diffFormHumans() {
-    return dayjs.unix(timestamp).fromNow()
-  }
+  const diffFormHumans = computed(() =>
+    dayjs
+      .unix(
+        (timestamp as Timestamp)?.seconds || (timestamp as number)
+      )
+      .fromNow()
+  )
 
-  function humanFriendlyDate() {
-    return dayjs.unix(timestamp).format('L LT')
-  }
+  const humanFriendlyDate = computed(() =>
+    dayjs
+      .unix(
+        (timestamp as Timestamp)?.seconds || (timestamp as number)
+      )
+      .format('L LT')
+  )
 </script>

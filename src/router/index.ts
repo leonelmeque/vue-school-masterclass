@@ -11,8 +11,7 @@ import CategoryPage from '@/pages/CategoryPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
 import ThreadCreate from '@/pages/ThreadCreate.vue'
 import ThreadEdit from '@/pages/ThreadEdit.vue'
-import { findById } from '@/helpers'
-import { useStore } from 'vuex'
+import store from '@/store'
 
 const routes: RouterOptions['routes'] = [
   {
@@ -43,24 +42,24 @@ const routes: RouterOptions['routes'] = [
     path: '/thread/:id',
     name: 'ThreadShow',
     component: PageThreadShow,
-    props: true,
-    beforeEnter(to, _from, next) {
-      const store = useStore()
-
-      const threadExists = findById(
-        store.state.threads,
-        (to as any)?.params?.id
-      )
-
-      if (threadExists) return next()
-      else
-        next({
-          name: 'NotFound',
-          params: { pathMatch: to.path.substring(1).split('/') },
-          query: to.query,
-          hash: to.hash
-        })
-    }
+    props: true
+    // beforeEnter(to, _from, next) {
+    //   const store = useStore()
+    //
+    //   const threadExists = findById(
+    //     store.state.threads,
+    //     (to as any)?.params?.id
+    //   )
+    //
+    //   if (threadExists) return next()
+    //   else
+    //     next({
+    //       name: 'NotFound',
+    //       params: { pathMatch: to.path.substring(1).split('/') },
+    //       query: to.query,
+    //       hash: to.hash
+    //     })
+    // }
   },
   {
     path: '/forum/:forumId/thread/create',
@@ -98,6 +97,10 @@ const router = createRouter({
 
     return scroll
   }
+})
+
+router.beforeEach(() => {
+  store.dispatch('unsubscribeAllSnapshots')
 })
 
 export default router

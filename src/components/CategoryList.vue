@@ -9,16 +9,17 @@
 </template>
 <script lang="ts" setup>
   import ForumList from './ForumList.vue'
-  import sourceData from '../../data.json'
+  import { useStore } from 'vuex'
 
+  const store = useStore()
   const { categories } = defineProps<{
-    categories: typeof sourceData.categories
+    categories: typeof store.state.categories
   }>()
 
   function getForumsForCateogry(
-    category: (typeof sourceData.categories)[0]
+    category: (typeof store.state.categories)[0]
   ) {
-    return sourceData.forums.filter(
+    return store.state.forums.filter(
       (forum) => forum.categoryId === category.id
     )
   }

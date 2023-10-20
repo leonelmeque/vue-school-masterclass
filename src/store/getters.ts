@@ -7,7 +7,7 @@ export default {
   },
   user: (state: any) => {
     return (id: string) => {
-      const user = findById(state.users, id)
+      const user = findById<any>(state.users, id)
 
       if (!user) return null
 
@@ -19,7 +19,7 @@ export default {
           )
         },
         get postsCount(): number {
-          return this.posts.length
+          return user.postsCount ?? 0
         },
 
         get threads(): any {
@@ -28,7 +28,7 @@ export default {
           )
         },
         get threadsCount(): number {
-          return this.threads.length
+          return user?.threads?.length ?? 0
         }
       }
     }
@@ -45,7 +45,7 @@ export default {
           return findById(state.users, thread?.userId)
         },
         get repliesCount() {
-          return thread?.posts.length - 1 || 0
+          return thread?.posts?.length - 1 || 0
         },
         get contributorsCount() {
           return thread?.contributors?.length || 0

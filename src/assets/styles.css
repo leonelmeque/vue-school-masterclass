@@ -162,7 +162,7 @@ figcaption {
 }
 
 .forum-stats ul {
-  font-size: 0px;
+  font-size: 0;
   display: flex;
   justify-content: center;
   margin-bottom: 50px;
@@ -2464,10 +2464,7 @@ h3,
 h4,
 h5 {
   font-weight: 700;
-  margin-bottom: 10px;
-  margin-top: 0;
-  margin-left: 0;
-  margin-right: 0;
+  margin: 0 0 10px;
 }
 
 ul {

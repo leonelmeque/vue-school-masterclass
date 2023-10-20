@@ -2,38 +2,41 @@
   <div class="col-full">
     <form @submit.prevent="save">
       <div class="form-group">
-        <textarea name="" id="" cols="30" rows="10" class="form-input" v-model="text"></textarea>
+        <textarea
+          id=""
+          v-model="postCopy.text"
+          class="form-input"
+          cols="30"
+          name=""
+          rows="10"
+        ></textarea>
       </div>
       <div class="form-actions">
-        <button class="btn-blue" :disabled="shouldButtonEnable">Submit post</button>
+        <button :disabled="shouldButtonEnable" class="btn-blue">
+          {{ post?.id ? 'Update Post' : 'Submit post' }}
+        </button>
       </div>
     </form>
   </div>
 </template>
 
-<script setup lang="ts">
-  import type { Post } from '@/utils/shared-types'
+<script lang="ts" setup>
   import { computed, ref } from 'vue'
 
-  const { id } = defineProps<{ id?: string }>()
+  const { post = { text: '', id: '' } } = defineProps<{
+    post?: any
+  }>()
 
   const emit = defineEmits(['save'])
 
-  const text = ref('')
+  const postCopy = ref({ ...post })
 
   const save = () => {
-    const postId = 'xyz' + Math.random()
-    const post: Post = {
-      text: text.value,
-      publishedAt: Math.floor(Date.now() / 1000),
-      threadId: id as string,
-      userId: '38St7Q8Zi2N1SPa5ahzssq9kbyp1',
-      id: postId
-    }
-
-    text.value = ''
-    emit('save', { post })
+    emit('save', { ...postCopy.value })
+    postCopy.value.text = ''
   }
 
-  const shouldButtonEnable = computed(() => text.value.length < 3)
+  const shouldButtonEnable = computed(
+    () => postCopy.value.text.length < 3
+  )
 </script>
