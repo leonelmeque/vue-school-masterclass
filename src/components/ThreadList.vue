@@ -43,7 +43,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useStore } from 'vuex'
-  import { findById } from '@/helpers'
+  import { findById } from '@/utils'
 
   const store = useStore()
 
@@ -51,7 +51,7 @@
     threads: typeof store.state.users
   }>()
 
-  const users = ref(store.state.users)
+  const users = ref(store.state.users.items)
 
   function userById(userId?: string) {
     return (
