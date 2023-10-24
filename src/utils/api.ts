@@ -3,15 +3,22 @@ import {
   collection,
   doc,
   getDocs,
+  getFirestore,
   increment,
   onSnapshot,
   query,
   serverTimestamp,
+  setDoc,
   type Unsubscribe,
   updateDoc,
   writeBatch
 } from 'firebase/firestore'
-import { db } from '@/config/firebase-config'
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword
+} from 'firebase/auth'
+import app, { db } from '@/config/firebase-config'
 
 async function fetchResourceById(
   resource: string,
@@ -25,7 +32,7 @@ async function fetchResourceById(
       if (doc.exists()) {
         data = doc.data()
       }
-      resolve({ unsubscribe, resource: data })
+      resolve({ unsubscribe, resource: data } as const)
     })
   })
 }
@@ -120,11 +127,66 @@ async function updatePost(post: any) {
   return { id: postRef.id, ...post }
 }
 
+async function createUser(newUser: any) {
+  const firestore = getFirestore()
+
+  const userRef = doc(firestore, 'users', newUser.id)
+
+  await setDoc(userRef, newUser)
+
+  return newUser
+}
+
+async function registerAuthUser({ email, password }: any) {
+  const auth = getAuth(app)
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  )
+  const user = userCredential.user
+
+  return {
+    id: user.uid,
+    name: user.displayName,
+    email: user.email,
+    photoURL: user.photoURL,
+    isModerator: false,
+    threads: [],
+    posts: [],
+    postsCount: 0,
+    threadsCount: 0,
+    createdAt: Date.now()
+  } as const
+}
+
+const signInWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
+  const auth = getAuth(app)
+  const userCredential = await firebaseSignInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  )
+  return userCredential.user
+}
+
+const signOut = async () => {
+  const auth = getAuth(app)
+  await auth.signOut()
+}
+
 export const api = {
   fetchResource,
   fetchResourceById,
   createPost,
   createThread,
   updateThread,
-  updatePost
+  updatePost,
+  createUser,
+  registerAuthUser,
+  signInWithEmailAndPassword,
+  signOut
 }
