@@ -12,6 +12,7 @@ import ProfilePage from '@/pages/ProfilePage.vue'
 import ThreadCreate from '@/pages/ThreadCreate.vue'
 import ThreadEdit from '@/pages/ThreadEdit.vue'
 import store from '@/store'
+import SignInPage from '@/pages/SignInPage.vue'
 
 const routes: RouterOptions['routes'] = [
   {
@@ -72,6 +73,16 @@ const routes: RouterOptions['routes'] = [
     name: 'ThreadEdit',
     component: ThreadEdit,
     props: true
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/pages/RegisterPage.vue')
+  },
+  {
+    path: '/signin',
+    name: 'SignIn',
+    component: SignInPage
   },
   {
     path: '/forum/:id',

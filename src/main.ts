@@ -6,7 +6,13 @@ import globalComponentRegister from './globalComponentRegister'
 import store from '@/store'
 import './config/firebase-config.js'
 import FontAwesome from '@/plugins/FontAwesome'
+import { onFirebaseAuthStateChanged } from '@/utils'
 
+onFirebaseAuthStateChanged(async (user) => {
+  if (user) {
+    await store.dispatch('fetchAuthUser')
+  }
+})
 const app = createApp(App)
 
 app.use(router)
