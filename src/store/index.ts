@@ -1,19 +1,25 @@
 //@ts-ignore
 import { createStore } from 'vuex'
-import sourceData from '../../data.json'
 import mutations from '@/store/mutations'
 import actions from '@/store/actions'
 import getters from '@/store/getters'
 
-export default createStore<typeof sourceData>({
+import threads from '@/store/threads/module'
+import users from '@/store/users/module'
+import posts from '@/store/posts/module'
+
+export default createStore({
+  modules: {
+    threads,
+    users,
+    posts
+  },
   state: {
     categories: [],
     forums: [],
-    threads: [],
     posts: [],
-    users: [],
     unsubscribes: [],
-    authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3'
+    authId: null
   },
   actions,
   getters,
