@@ -30,7 +30,7 @@
 
   import { computed, onMounted } from 'vue'
   import { useStore } from 'vuex'
-  import { findById } from '@/helpers'
+  import { findById } from '@/utils'
   import { useAsyncDataStatus } from '@/composables/use-async-data-status'
 
   const props = defineProps<{
@@ -57,7 +57,7 @@
     })
 
     await store.dispatch('fetchUsers', {
-      ids: threads.value.map((thread: any) => thread.userId)
+      ids: threads.value.map((thread: any) => thread?.userId)
     })
     setReady()
   })

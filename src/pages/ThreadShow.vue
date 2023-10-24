@@ -41,7 +41,7 @@
 
   const store = useStore()
 
-  const posts = computed(() => store.state.posts)
+  const posts = computed(() => store.state.posts.items)
 
   const thread = computed(() => store.getters.thread(id))
 
@@ -49,7 +49,7 @@
     posts.value.filter((p: any) => p.threadId === id)
   )
 
-  const addPost = ({ post }: { post: Post }) => {
+  const addPost = (post: Post) => {
     store.dispatch('createPost', { ...post, threadId: id })
   }
 

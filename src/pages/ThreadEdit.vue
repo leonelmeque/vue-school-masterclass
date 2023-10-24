@@ -17,7 +17,7 @@
   import { useStore } from 'vuex'
   import { useRouter } from 'vue-router'
   import ThreadEditor from '@/components/ThreadEditor.vue'
-  import { findById } from '@/helpers'
+  import { findById } from '@/utils'
   import { useAsyncDataStatus } from '@/composables/use-async-data-status'
 
   const { id } = defineProps<{ id: string }>()
@@ -27,14 +27,14 @@
 
   const thread = computed(() => {
     return findById<typeof store.state.threads>(
-      store.state.threads,
+      store.state.threads.items,
       id
     )
   })
 
   const text = computed(() => {
     const post = findById<typeof store.state.posts>(
-      store.state.posts,
+      store.state.posts.items,
       thread.value.posts[0]
     )
 

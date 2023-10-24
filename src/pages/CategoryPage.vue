@@ -12,7 +12,7 @@
   import { computed, onMounted } from 'vue'
   import ForumList from '@/components/ForumList.vue'
   import { useStore } from 'vuex'
-  import { findById } from '@/helpers'
+  import { findById } from '@/utils'
   import { useAsyncDataStatus } from '@/composables/use-async-data-status'
 
   const { id } = defineProps<{

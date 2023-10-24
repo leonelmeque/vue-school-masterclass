@@ -13,7 +13,7 @@
   import ThreadEditor from '@/components/ThreadEditor.vue'
   import { useRouter } from 'vue-router'
   import { computed, onMounted } from 'vue'
-  import { findById } from '@/helpers'
+  import { findById } from '@/utils'
   import { useAsyncDataStatus } from '@/composables/use-async-data-status'
 
   const { forumId } = defineProps<{ forumId: string }>()
