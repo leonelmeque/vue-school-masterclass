@@ -4,7 +4,12 @@
       Create new thread in <i>{{ forum?.name }}</i>
     </h1>
 
-    <ThreadEditor @cancel="cancel" @save="save" />
+    <ThreadEditor
+      @cancel="cancel"
+      @clean="formIsDirty = false"
+      @dirty="formIsDirty = true"
+      @save="save"
+    />
   </div>
 </template>
 
@@ -12,7 +17,7 @@
   import { useStore } from 'vuex'
   import ThreadEditor from '@/components/ThreadEditor.vue'
   import { useRouter } from 'vue-router'
-  import { computed, onMounted } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import { findById } from '@/utils'
   import { useAsyncDataStatus } from '@/composables/use-async-data-status'
 
@@ -21,6 +26,8 @@
   const store = useStore()
   const router = useRouter()
   const { setReady, isReady } = useAsyncDataStatus()
+
+  const formIsDirty = ref(false)
 
   const forum = computed(() => {
     return findById<typeof store.state.forums>(

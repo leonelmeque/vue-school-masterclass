@@ -7,15 +7,17 @@
       :text="text"
       :title="thread.title"
       @cancel="cancel"
+      @clean="formIsDirty = false"
+      @dirty="formIsDirty = true"
       @save="save"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed, onMounted } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import { useStore } from 'vuex'
-  import { useRouter } from 'vue-router'
+  import { onBeforeRouteLeave, useRouter } from 'vue-router'
   import ThreadEditor from '@/components/ThreadEditor.vue'
   import { findById } from '@/utils'
   import { useAsyncDataStatus } from '@/composables/use-async-data-status'
@@ -24,6 +26,9 @@
 
   const store = useStore()
   const { isReady, setReady } = useAsyncDataStatus()
+  const router = useRouter()
+
+  const formIsDirty = ref(false)
 
   const thread = computed(() => {
     return findById<typeof store.state.threads>(
@@ -41,7 +46,6 @@
     return post ? post.text : ''
   })
 
-  const router = useRouter()
   async function save({
     title,
     text
@@ -73,5 +77,14 @@
       ids: thread.value?.posts
     })
     setReady()
+  })
+
+  onBeforeRouteLeave(() => {
+    if (formIsDirty.value) {
+      const confirmed = window.confirm(
+        'Are you sure you want to leave? Unsaved changes will be lost!'
+      )
+      if (!confirmed) return false
+    }
   })
 </script>

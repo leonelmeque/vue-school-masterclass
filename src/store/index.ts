@@ -19,6 +19,7 @@ export default createStore({
     forums: [],
     posts: [],
     unsubscribes: [],
+    authUserUnsubscribe: null,
     authId: null
   },
   actions,

@@ -2,6 +2,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   increment,
@@ -16,7 +17,9 @@ import {
 import {
   createUserWithEmailAndPassword,
   getAuth,
-  signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword
+  GoogleAuthProvider,
+  signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
+  signInWithPopup
 } from 'firebase/auth'
 import app, { db } from '@/config/firebase-config'
 
@@ -178,6 +181,26 @@ const signOut = async () => {
   await auth.signOut()
 }
 
+const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider()
+  const response = await signInWithPopup(getAuth(app), provider)
+  const user = response.user
+
+  const userRef = doc(db, 'users', user.uid)
+  const userDoc = await getDoc(userRef)
+
+  return {
+    user: {
+      id: user.uid,
+      name: user.displayName,
+      email: user.email,
+      avatar: user.photoURL,
+      username: user.email
+    },
+    exists: userDoc.exists()
+  }
+}
+
 export const api = {
   fetchResource,
   fetchResourceById,
@@ -188,5 +211,6 @@ export const api = {
   createUser,
   registerAuthUser,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  signInWithGoogle
 }

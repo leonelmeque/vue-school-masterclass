@@ -2,6 +2,7 @@
 import { type ActionTree } from 'vuex'
 import { api } from '@/utils/api'
 import { getFirebaseUser } from '@/utils/firebase-utils'
+import type { Unsubscribe } from 'firebase/firestore'
 
 export default {
   // Single fetching actions
@@ -11,12 +12,25 @@ export default {
       return
     }
 
-    const user = await dispatch('fetchItem', {
+    function handleUnsubscribe(unsubscribe: Unsubscribe) {
+      commit('setAuthUserUnsubscribe', unsubscribe)
+    }
+
+    await dispatch('fetchItem', {
       resource: 'users',
-      id: userId
+      id: userId,
+      handleUnsubscribe
     })
     commit('setAuthId', userId)
     // commit('setAuthUser', user)
+  },
+  signInWithGoogle: async ({ dispatch }: any) => {
+    const { user, exists } = await api.signInWithGoogle()
+    if (!exists) {
+      return await dispatch('createUser', user)
+    }
+
+    return user
   },
   signInWithEmailAndPassword: async (
     context: any,
@@ -35,7 +49,10 @@ export default {
   fetchForums: ({ dispatch }: any, { ids }: any) => {
     dispatch('fetchItems', { ids, resource: 'forums' })
   },
-  fetchItem: async ({ commit }: any, { id, resource }: any) => {
+  fetchItem: async (
+    { commit }: any,
+    { id, resource, handleUnsubscribe }: any
+  ) => {
     const { unsubscribe, resource: data } =
       await api.fetchResourceById(resource, id)
 
@@ -43,7 +60,12 @@ export default {
       commit('setItem', { resource, id, item: data })
       return data
     }
-    commit('appendUnsubscribe', { unsubscribe })
+
+    if (handleUnsubscribe) {
+      handleUnsubscribe(unsubscribe)
+    } else {
+      commit('appendUnsubscribe', { unsubscribe })
+    }
     return data
   },
   fetchItems: ({ dispatch }: any, { ids, resource }: any) =>
@@ -55,6 +77,12 @@ export default {
   async unsubscribeAllSnapshots({ state, commit }: any) {
     state.unsubscribes.forEach((unsubscribe: any) => unsubscribe())
     commit('clearAllUnsubscribes')
+  },
+  async unsubscribeAuthUserSnapshot({ state, commit }: any) {
+    if (state.authUserUnsubscribe) {
+      state.authUserUnsubscribe()
+      commit('setAuthUserUnsubscribe', null)
+    }
   },
   fetchCategories: ({ dispatch }: any, { ids }: any) => {
     return dispatch('fetchItems', {

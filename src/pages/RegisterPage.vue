@@ -56,6 +56,14 @@
         </div>
       </form>
       <div class="text-center push-top">
+        <button
+          class="btn-red btn-xsmall"
+          @click="registerWithGoogle"
+        >
+          <i class="fa fa-google fa-btn"></i> Register with Google
+        </button>
+      </div>
+      <div class="text-center push-top">
         <button class="btn-red btn-xsmall">
           <i class="fa fa-google fa-btn"></i> Sign up with Google
         </button>
@@ -68,6 +76,7 @@
   import { ref } from 'vue'
   import { useStore } from 'vuex'
   import { useRouter } from 'vue-router'
+  import { useAuthProvider } from '@/composables/use-auth-provider'
 
   const form = ref({
     name: '',
@@ -79,6 +88,8 @@
 
   const store = useStore()
   const router = useRouter()
+
+  const { signInWithGoogle: registerWithGoogle } = useAuthProvider()
 
   function register() {
     store.dispatch('registerUser', form.value)

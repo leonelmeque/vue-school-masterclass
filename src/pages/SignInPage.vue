@@ -37,7 +37,7 @@
       </form>
 
       <div class="push-top text-center">
-        <button class="btn-red btn-xsmall">
+        <button class="btn-red btn-xsmall" @click="signInWithGoogle">
           <i class="fa fa-google fa-btn"></i>Sign in with Google
         </button>
       </div>
@@ -49,6 +49,7 @@
   import { ref } from 'vue'
   import { useStore } from 'vuex'
   import { useRouter } from 'vue-router'
+  import { useAuthProvider } from '@/composables/use-auth-provider'
 
   const form = ref({
     email: '',
@@ -57,6 +58,7 @@
 
   const store = useStore()
   const router = useRouter()
+  const { signInWithGoogle } = useAuthProvider()
 
   const signIn = async () => {
     try {

@@ -4,20 +4,18 @@
 
 // Your web app's Firebase configuration
 import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: ''
+  apiKey: process.env.VUE_API_KEY,
+  authDomain: process.env.VUE_AUTH_DOMAIN,
+  projectId: process.env.VUE_PROJECT_ID,
+  storageBucket: process.env.VUE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_ID
 }
 
 // Initialize Firebase
 
 const firebaseApp = initializeApp(firebaseConfig)
 
-export const db = getFirestore(firebaseApp)
 export default firebaseApp

@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref } from 'vue'
+  import { computed, ref, watchEffect } from 'vue'
 
   const { title = '', text = '' } = defineProps<{
     title: string
@@ -48,6 +48,8 @@
   }>()
   const emit = defineEmits<{
     (e: 'save', props: { title: string; text: string }): void
+    (e: 'clean'): void
+    (e: 'dirty'): void
   }>()
 
   const form = ref({
@@ -58,8 +60,18 @@
   const existing = computed(() => !!title)
 
   function save() {
+    emit('clean')
     emit('save', {
       ...form.value
     })
   }
+
+  watchEffect(() => {
+    if (form.value.title !== title || form.value.text !== text) {
+      form.value.title = title
+      emit('dirty')
+    } else {
+      emit('clean')
+    }
+  })
 </script>

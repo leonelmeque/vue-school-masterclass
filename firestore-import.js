@@ -24,9 +24,6 @@ const tempFileName = __dirname + '/data-temp.json'
   fs.unlinkSync(tempFileName)
 })()
 
-// Helper Functions
-// -------------------------------------
-
 // JSON To Firestore
 async function jsonToFirestore() {
   try {

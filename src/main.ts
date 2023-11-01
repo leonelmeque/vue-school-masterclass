@@ -9,6 +9,7 @@ import FontAwesome from '@/plugins/FontAwesome'
 import { onFirebaseAuthStateChanged } from '@/utils'
 
 onFirebaseAuthStateChanged(async (user) => {
+  await store.dispatch('unsubscribeAuthUserSnapshot')
   if (user) {
     await store.dispatch('fetchAuthUser')
   }
